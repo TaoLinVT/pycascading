@@ -156,6 +156,13 @@ public class Util {
       // bootstrap.py, based on the command line parameters where we specified
       // the PyCascading & source archives
       Object archives = config.get("pycascading.distributed_cache.archives");
+
+      properties.setProperty("mapred.output.compress", "true");
+      properties.setProperty("mapred.compress.map.output", "true");
+      properties.setProperty("mapred.output.compression.type", "BLOCK");
+      properties.setProperty("mapred.map.output.compression.codec", "org.apache.hadoop.io.compress.GzipCodec");
+      properties.setProperty("mapred.output.compression.codec","org.apache.hadoop.io.compress.GzipCodec");
+
       if (archives != null) {
         tempDir = new TemporaryHdfs();
         String tempDirLocation = tempDir.createTmpFolder(conf);
