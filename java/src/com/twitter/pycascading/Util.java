@@ -147,6 +147,13 @@ public class Util {
     properties.setProperty("pycascading.running_mode", runningMode);
     properties.setProperty("pycascading.main_file", (String) config.get("pycascading.main_file"));
 
+    key_for_config_options = "pycascading.hadoop.mapred.options"
+    if key_for_config_options in config:
+        # Apply user defined configurations, for example, use gzip to compress output
+        config_options = config.get(key_for_config_options)
+        for (option_name, option_value) in config_options.iteritems():
+            properties.setProperty(option_name, option_value);
+
     Configuration conf = new Configuration();
     TemporaryHdfs tempDir = null;
     if ("hadoop".equals(runningMode)) {
@@ -156,13 +163,6 @@ public class Util {
       // bootstrap.py, based on the command line parameters where we specified
       // the PyCascading & source archives
       Object archives = config.get("pycascading.distributed_cache.archives");
-
-      properties.setProperty("mapred.output.compress", "true");
-      properties.setProperty("mapred.compress.map.output", "true");
-      properties.setProperty("mapred.output.compression.type", "BLOCK");
-      properties.setProperty("mapred.map.output.compression.codec", "org.apache.hadoop.io.compress.GzipCodec");
-      properties.setProperty("mapred.output.compression.codec","org.apache.hadoop.io.compress.GzipCodec");
-
       if (archives != null) {
         tempDir = new TemporaryHdfs();
         String tempDirLocation = tempDir.createTmpFolder(conf);

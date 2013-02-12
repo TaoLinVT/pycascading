@@ -234,6 +234,17 @@ class Flow(object):
         source_map = self.__get_active_sources()
         tails = [t.get_assembly() for t in self.tails]
         import pycascading.pipe
+        key_for_config_options = "pycascading.hadoop.mapred.options"
+        if config and key_for_config_options in config:
+            # To use gzip compression, following key/value pair should be included in given config dict
+            #"pycascading.hadoop.mapred.options": {
+            #    "mapred.output.compress": "true",
+            #    "mapred.compress.map.output": "true",
+            #    "mapred.output.compression.type": "BLOCK",
+            #    "mapred.map.output.compression.codec": "org.apache.hadoop.io.compress.GzipCodec",
+            #    "mapred.output.compression.codec": "org.apache.hadoop.io.compress.GzipCodec",
+            #}
+            pycascading.pipe.config[key_for_config_options] = config[key_for_config_options]
         Util.run(name, num_reducers, min_split_size, pycascading.pipe.config, source_map, \
                  self.sink_map, tails)
         
